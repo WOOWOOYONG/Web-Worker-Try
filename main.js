@@ -32,4 +32,6 @@ document.getElementById('encrypt').addEventListener('click', () => {
     console.error('Worker 錯誤: ', e);
     resultDisplay.textContent = '加密過程中發生錯誤';
   };
+
+  worker.terminate();
 });
