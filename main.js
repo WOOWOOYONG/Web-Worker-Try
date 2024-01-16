@@ -10,19 +10,26 @@
 //   };
 // }
 
-document.getElementById('encrypt').addEventListener('click', function () {
-  const data = document.getElementById('inputData').value;
-  if (data) {
-    const worker = new Worker('worker.js');
-    worker.postMessage(data);
+document.getElementById('encrypt').addEventListener('click', () => {
+  const inputData = document.getElementById('inputData');
+  const resultDisplay = document.getElementById('result');
+  const data = inputData.value;
 
-    worker.onmessage = function (e) {
-      document.getElementById('result').textContent = e.data;
-      worker.terminate();
-    };
-
-    worker.onerror = function (e) {
-      console.error('Worker 錯誤: ', e);
-    };
+  if (!data) {
+    resultDisplay.textContent = '請輸入要加密的資料';
+    return;
   }
+
+  const worker = new Worker('worker.js');
+  worker.postMessage(data);
+
+  worker.onmessage = (e) => {
+    resultDisplay.textContent = e.data;
+    worker.terminate();
+  };
+
+  worker.onerror = (e) => {
+    console.error('Worker 錯誤: ', e);
+    resultDisplay.textContent = '加密過程中發生錯誤';
+  };
 });
